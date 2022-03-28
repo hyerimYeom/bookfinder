@@ -1,116 +1,101 @@
-<!-- 사려깊은 웹 사이트 만들기 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>Book Searcher</title>
 </head>
 <body>
-   <div class="container pt-4">
-    <h1>Welcome to Book store</h1>
-    <div class="search_bar row d-flex justify-content-around">
-      <input type="text" class="input col-9" value="" id="search_input" placeholder="Put the Book title Or authors in here 📖">
-      <button type="button" class="btn btn-primary col-3" id="search_button">Search</button>
+    <div class="container">
+        <h1>Welcome to Book Searcher</h1>
+        <div class="search_bar row d-flex justify-content-around">
+            <input type="text" class="input col-9" value="" placeholder="Put the releated Keyword of Book you wanna find! 📖">
+            <button class="btn btn-primary col-3" id="search_button">Search</button>
+        </div>
+        <main class="list row d-flex justify-content-around">
+            <p></p> 
+        </main>
     </div>
-    <main class="list row d-flex justify-content-around">
-      <p></p>
-    </main>
-  </div>
 </body>
-
 <script>
-  let keyword = document.querySelector('#search_input')
-  let search_button = document.querySelector('#search_button')
-  let list = document.querySelector('.list');
-  
-  // get Books info related to keyword
-  async function getapi(url) {
-      // Storing response
-      const response = await fetch(url);
+    let keyword = document.querySelector("#search_input");
+    let search_button = document.querySelector("#search_button");
+    let list = document.querySelector('.list');
 
-      // Storing data in form of JSON
-      let data = response.json();
-      console.log('data : ' , data)
-      console.log('response : ' , response)
-      if (response.status === 200) {
-        return await data;  
-      }
-  }
-  
-  //shorten the description of book
-  function short(long){
-    return long.substring(0, 250).concat('...');
-  }
+    async function getapi(url){
+        const response = await fetch(url);
 
-  //clear the data from raw data
-  function setData(info){
-    
-    if(info === undefined || info.totalItems === 0) return '404';
-    
-    return books = info.items.map(book =>{
-        let b = book.volumeInfo    
+        let data = response.json();
+        if(repose.status === 200){
+            return await data;
+        }
+    }
+
+    function short(long){
+        return long.substring(0, 250).concat('...');
+    }
+
+    function setData(info){
+        let b = book.volumeInfo
         let new_book = {};
 
         new_book.title = b.title;
-        new_book.publisher = b.publisher === undefined ? 'Unable to Check' : b.publisher;
-        new_book.description = b.description === undefined ? 'Plz Click More Details...' : short(b.description)
+        new_book.publisher = !b.publisher ? 'Cannot Get the Data' : b.publisher;
+        new_book.description = !b.description ? 'Please, Click the detail button' : short(b.description);
+        new_book.image = !b.imageLinks ? `https://books.google.com/books/content?id=u1bUDwAAQ%E2%80%A6=frontcover&img=1&zoom=5&edge=curl&source=gbs_api` : `https://books.google.com/books/publisher/content/images/frontcover/${book.id}?fife=w240-h480`;
         new_book.previewLink = b.previewLink;
         new_book.infoLink = b.infoLink;
-        new_book.image = b.imageLinks === undefined || '' ? 
-        'https://books.google.com/books/content?id=u1bUDwAAQ%E2%80%A6=frontcover&img=1&zoom=5&edge=curl&source=gbs_api' : `https://books.google.com/books/publisher/content/images/frontcover/${book.id}?fife=w240-h480`;
 
-        new_book = {...new_book, ...b.imageLinks}
-        return new_book
-    })
-  } 
-
-  function displayList(books){
-    let cards = '';
-    if (books === '404') {
-      list.innerHTML = `<div class="text-center">No related data exists for keyword 😭</div>` 
-      return
+        return new_book;
     }
 
-    books.forEach(book => {
-      cards += `<div class="card col-sm-6 col-md-4 col-lg-3">
-            <img src=${book.image} class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">${book.title}</h5>
-              <p class="card-text">${book.publisher}</p>
-              <p class="card-text">${book.description}</p>
-              <a href="${book.infoLink}" class="btn btn-primary">More Details...</a>
+    function displayList(books){
+        let cards = '';
+        if(books === '404') {
+            list.innerHTML = `<div class="text-center"> No releated data exitst for the Keyword </div>`;
+            return
+        }
+        
+        books.forEach(book => {
+            cards += `
+            <div class="card col-sm-6 col-md-4 col-lg-3">
+                <img src=${book.image} class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">${book.title}</h5>
+                    <p class="card-text">Publisher : ${book.publisher}</p>
+                    <p class="card-text">${book.description}</p>
+                    <a href=${book.infoLink} class="btn btn-primary">More Details...</a>
+                </div>
             </div>
-          </div>`;
-    });
+            `
+        })
+        list.innerHTML = cards;
+    }
 
-  list.innerHTML = cards;
-}
+    function setErrorMsg(e){
+        let errorMsg = `
+        <div class="text-center">
+            Please, Let the developer know the error below : <br/>
+            ${e}
+        </div>`;
+        list.innerHTML = errorMsg;
+    }
 
-  function setErrorMsg(e){
-    let errorMsg = `<div class="text-center">Please, Let the developer know the error : <br/> ${e}<div>`;
-    list.innerHTML = errorMsg;
-  }
+    search_button.addEventListener('click', function(){
+        let url = `https://www.googleapis.com/books/v1/volumes?q=${keyword.value}`;
+        let data = getapi(url)
 
-  search_button.addEventListener('click', function(){
-    console.log('hi');
-    console.log(keyword.value);
-    // let url = `https://www.googleapis.com/books/v1/volumes?q=${keyword.value}`
-    let data = getapi(url)
-
-    data
-      .then(d =>  {
-        let clearData = setData(d);
-        displayList(clearData);
-      })
-      .catch(e => {
-        console.log('e : ', e)
-        setErrorMsg(e)
-      })
-      
-  })
+        data
+            .then(d => {
+                let clearData = setData(d);
+                displayList(clearData);
+            })
+            .catch(e =>{
+                setErrorMsg(e)
+            })
+    })
+    
+    
 </script>
 </html>
