@@ -14,13 +14,10 @@ for applying [Chingu program](https://www.chingu.io/).
 * Link to the detail of book
 * Able to check a book cover if it exists, a description, the author(s) and publisher
 
-## Running the project
-##### Live version : [Book Seacher](https://hyerimyeom.github.io/clone-landingpage/)
-
 ## Dependencies
 * HTML5
 * Javascript
   - fetch()
   - async, await
 * Library
-  - [Bootstrap v5.1.3] (https://getbootstrap.com/)
+  - [Bootstrap(v.5.1.3)] (https://getbootstrap.com/)
