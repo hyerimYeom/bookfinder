@@ -11,7 +11,7 @@
     <div class="container">
         <h1>Welcome to Book Searcher</h1>
         <div class="search_bar row d-flex justify-content-around">
-            <input type="text" class="input col-9" value="" placeholder="Put the releated Keyword of Book you wanna find! 📖">
+            <input type="text" class="input col-9" id="search_input" value="" placeholder="Put the releated Keyword of Book you wanna find! 📖">
             <button class="btn btn-primary col-3" id="search_button">Search</button>
         </div>
         <main class="list row d-flex justify-content-around">
@@ -28,7 +28,7 @@
         const response = await fetch(url);
 
         let data = response.json();
-        if(repose.status === 200){
+        if(response.status === 200){
             return await data;
         }
     }
@@ -38,17 +38,19 @@
     }
 
     function setData(info){
-        let b = book.volumeInfo
-        let new_book = {};
+        return books = info.items.map(book =>{
+            let new_book = {};
+            let b = book.volumeInfo    
 
-        new_book.title = b.title;
-        new_book.publisher = !b.publisher ? 'Cannot Get the Data' : b.publisher;
-        new_book.description = !b.description ? 'Please, Click the detail button' : short(b.description);
-        new_book.image = !b.imageLinks ? `https://books.google.com/books/content?id=u1bUDwAAQ%E2%80%A6=frontcover&img=1&zoom=5&edge=curl&source=gbs_api` : `https://books.google.com/books/publisher/content/images/frontcover/${book.id}?fife=w240-h480`;
-        new_book.previewLink = b.previewLink;
-        new_book.infoLink = b.infoLink;
+            new_book.title = b.title;
+            new_book.publisher =  b.publisher === undefined ? 'Cannot Get the Data' : b.publisher;
+            new_book.description = b.description === undefined ? 'Please, Click the detail button' : short(b.description);
+            new_book.image = b.imageLinks === undefined || '' ? 'https://books.google.com/books/content?id=u1bUDwAAQ%E2%80%A6=frontcover&img=1&zoom=5&edge=curl&source=gbs_api' : `https://books.google.com/books/publisher/content/images/frontcover/${book.id}?fife=w240-h480`;
+            new_book.previewLink = b.previewLink;
+            new_book.infoLink = b.infoLink;
 
-        return new_book;
+            return new_book;
+        })
     }
 
     function displayList(books){
@@ -58,6 +60,7 @@
             return
         }
         
+        // console.log(books)
         books.forEach(book => {
             cards += `
             <div class="card col-sm-6 col-md-4 col-lg-3">
