@@ -38,6 +38,9 @@
     }
 
     function setData(info){
+
+        if(!info) return '404';
+
         return books = info.items.map(book =>{
             let new_book = {};
             let b = book.volumeInfo    
@@ -100,6 +103,7 @@
             })
     })
     
+    JSON.parse
     
 </script>
 </html>
