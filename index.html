@@ -26,7 +26,7 @@
 
     async function getapi(url){
         const response = await fetch(url);
-
+        
         let data = response.json();
         if(response.status === 200){
             return await data;
@@ -38,8 +38,9 @@
     }
 
     function setData(info){
+        console.log('info ; ',info)
 
-        if(!info) return '404';
+        if(!info || info.totalItems === 0) return '404';
 
         return books = info.items.map(book =>{
             let new_book = {};
@@ -59,7 +60,7 @@
     function displayList(books){
         let cards = '';
         if(books === '404') {
-            list.innerHTML = `<div class="text-center"> No releated data exitst for the Keyword </div>`;
+            list.innerHTML = `<div class="text-center"> No releated data exitst for the Keyword 😭 </div>`;
             return
         }
         
@@ -95,6 +96,7 @@
 
         data
             .then(d => {
+                console.log(d)
                 let clearData = setData(d);
                 displayList(clearData);
             })
@@ -102,8 +104,5 @@
                 setErrorMsg(e)
             })
     })
-    
-    JSON.parse
-    
 </script>
 </html>
