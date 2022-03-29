@@ -20,4 +20,4 @@ for applying [Chingu program](https://www.chingu.io/).
   - fetch()
   - async, await
 * Library
-  - [Bootstrap(v.5.1.3)] (https://getbootstrap.com/)
+  - [Bootstrap(v.5.1.3)](https://getbootstrap.com/)
